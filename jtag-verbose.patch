@@ -1,0 +1,32 @@
+commit a1ccb519d03b7e3c996868b606500de337111b8b
+Author: Matt King <jtag@syncsrc.org>
+Date:   Fri Jul 31 19:37:51 2015 -0700
+
+    fixes to JTAG verbose printing
+
+diff --git a/src/jtag/commands.c b/src/jtag/commands.c
+index 5e06840..9ab29f3 100644
+--- a/src/jtag/commands.c
++++ b/src/jtag/commands.c
+@@ -231,7 +231,7 @@ int jtag_read_buffer(uint8_t *buffer, const struct scan_command *cmd)
+ 					malloc(DIV_ROUND_UP(num_bits, 8)), 0, num_bits);
+ 
+ #ifdef _DEBUG_JTAG_IO_
+-			char *char_buf = buf_to_str(captured,
++			char *char_buf = buf_to_str(cmd->fields[i].in_value,
+ 					(num_bits > DEBUG_JTAG_IOZ)
+ 						? DEBUG_JTAG_IOZ
+ 						: num_bits, 16);
+diff --git a/src/jtag/drivers/ftdi.c b/src/jtag/drivers/ftdi.c
+index 14c5908..607c2e8 100644
+--- a/src/jtag/drivers/ftdi.c
++++ b/src/jtag/drivers/ftdi.c
+@@ -433,7 +433,7 @@ static void ftdi_execute_scan(struct jtag_command *cmd)
+ 		DEBUG_JTAG_IO("%s%s field %d/%d %d bits",
+ 			field->in_value ? "in" : "",
+ 			field->out_value ? "out" : "",
+-			i,
++			i+1,
+ 			cmd->cmd.scan->num_fields,
+ 			field->num_bits);
+ 

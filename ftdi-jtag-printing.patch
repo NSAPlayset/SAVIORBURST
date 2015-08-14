@@ -1,0 +1,32 @@
+commit 9b62258a7cd566e8e626dbb8bb0601b38c974d20
+Author: Matt King <jtag@syncsrc.org>
+Date:   Fri Jul 31 19:40:17 2015 -0700
+
+    better ftdi JTAG debug printing
+
+diff --git a/src/jtag/drivers/ftdi.c b/src/jtag/drivers/ftdi.c
+index 607c2e8..05789fd 100644
+--- a/src/jtag/drivers/ftdi.c
++++ b/src/jtag/drivers/ftdi.c
+@@ -428,8 +428,11 @@ static void ftdi_execute_scan(struct jtag_command *cmd)
+ 	struct scan_field *field = cmd->cmd.scan->fields;
+ 	unsigned scan_size = 0;
+ 
++	uint8_t *buffer;
++	scan_size = jtag_build_buffer(cmd->cmd.scan, &buffer);
++
+ 	for (int i = 0; i < cmd->cmd.scan->num_fields; i++, field++) {
+-		scan_size += field->num_bits;
++		//scan_size += field->num_bits;
+ 		DEBUG_JTAG_IO("%s%s field %d/%d %d bits",
+ 			field->in_value ? "in" : "",
+ 			field->out_value ? "out" : "",
+@@ -480,6 +483,8 @@ static void ftdi_execute_scan(struct jtag_command *cmd)
+ 	if (tap_get_state() != tap_get_end_state())
+ 		move_to_state(tap_get_end_state());
+ 
++	jtag_read_buffer(buffer, cmd->cmd.scan);
++
+ 	DEBUG_JTAG_IO("%s scan, %i bits, end in %s",
+ 		(cmd->cmd.scan->ir_scan) ? "IR" : "DR", scan_size,
+ 		tap_state_name(tap_get_end_state()));
