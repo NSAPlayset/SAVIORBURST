@@ -25,3 +25,9 @@ needed) must also be explicitly enabled.
 
 Once an OpenOCD log file has been created, log2svf.py can be used to convert it to
 an SVF file.
+
+----------
+
+Mouser Cart (Untested) for SOLDERPEEK parts can be found here:
+
+http://www.mouser.com/ProjectManager/ProjectDetail.aspx?AccessID=5cc594b9ce
